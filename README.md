@@ -1,71 +1,44 @@
-# Healthcare-Oncology-Claims-Analysis
-Work-in-progress analysis of oncology healthcare claims, currently focused on Excel-based data cleaning and quality assessment.
+Project Overview
+This project analyzes US inpatient healthcare claims data using SQL to evaluate utilization, diagnosis burden, and cost drivers. The analysis simulates real-world payer and pharmaceutical analytics workflows commonly used in epidemiology consulting and RWE teams.
 
-🧬 Oncology Claims Analysis (Work in Progress)
-📌 Project Status
+Key Objectives
 
-Ongoing – Data Cleaning & Preparation Phase
+Analyze inpatient utilization patterns
 
-📖 Overview
+Identify high-cost diagnoses and patients
 
-This repository contains an ongoing healthcare analytics project focused on oncology-related claims data. The current phase of the project involves cleaning, validating, and preparing raw claims data in Microsoft Excel to create an analysis-ready dataset for downstream SQL analysis and visualization.
+Evaluate length of stay and payment efficiency
 
-This project mirrors real-world claims analytics workflows, where data quality and validation are critical before any cost, utilization, or outcomes analysis can be performed.
+Demonstrate SQL-based healthcare analytics
 
-🎯 Project Objectives
+Data Source
+CMS DE-SynPUF synthetic inpatient claims dataset (HIPAA-compliant, publicly available).
 
-Clean and standardize raw oncology claims data
+Tools Used
 
-Identify and handle missing, null, and inconsistent values
+SQL Server / PostgreSQL
 
-Validate payment amounts, dates, and claim fields
+SQL (CTEs, joins, window functions)
 
-Prepare structured datasets for future SQL-based analysis
+Excel / Power BI (optional visualization)
 
-Document common data quality issues in healthcare claims
+Key Analyses
 
-🧾 Dataset Description
+Admissions per patient
 
-The dataset consists of de-identified oncology claims records, including:
+ICD-9 diagnosis frequency
 
-Patient demographics
+Cost distribution and payment ratios
 
-Diagnosis and procedure codes
+Readmission proxy analysis
 
-Admission and discharge information
+Chronic condition cost stratification
 
-Claim payment amounts
+Relevance
+This project demonstrates applied claims analytics skills relevant to:
 
-Provider and facility identifiers
+Epidemiology consulting
 
-⚠️ The data is currently in raw format and undergoing cleaning and validation.
+Real-world evidence (RWE)
 
-🛠 Tools Used (Current)
-
-Microsoft Excel
-
-Data cleaning and formatting
-
-Duplicate and missing-value checks
-
-Validation of dates, codes, and numeric fields
-
-Preliminary summaries for data quality assessment
-
-Planned Tools
-
-SQL – structured querying and analysis
-
-Power BI – visualization and reporting
-
-🔍 Current Work (In Progress)
-
-Reviewing column-level data completeness
-
-Standardizing diagnosis and procedure code formats
-
-Validating claim payment values
-
-Checking date consistency and logical errors
-
-Creating derived fields required for analysis
+Healthcare research & analytics roles
