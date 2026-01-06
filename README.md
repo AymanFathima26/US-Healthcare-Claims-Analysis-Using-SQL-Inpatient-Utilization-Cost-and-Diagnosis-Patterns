@@ -9,6 +9,7 @@ Demonstrate SQL-based healthcare analytics
 
 Data Source
 CMS DE-SynPUF synthetic inpatient claims dataset (HIPAA-compliant, publicly available).
+https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-claims-synthetic-public-use-files  
 
 Tools Used
 SQL Server / PostgreSQL
