@@ -1,0 +1,126 @@
+
+Select *
+FROM Inpatient_Claims
+
+SELECT COUNT(*) AS total_Rows
+FROM Inpatient_Claims
+
+SELECT TOP 5
+    CLM_FROM_DT,
+    CLM_THRU_DT
+FROM Inpatient_Claims;
+
+COLUMN AND NULL PROFILING 
+SELECT
+    SUM(CASE WHEN CLM_FROM_DT IS NULL THEN 1 ELSE 0 END) AS null_from_dt,
+    SUM(CASE WHEN CLM_THRU_DT IS NULL THEN 1 ELSE 0 END) AS null_thru_dt
+FROM Inpatient_Claims;
+
+Date Validation & Length of Stay (LOS)
+SELECT COUNT(*) AS invalid_dates
+FROM Inpatient_Claims
+WHERE CLM_FROM_DT > CLM_THRU_DT;
+
+SELECT
+    CLM_ID,
+   DESYNPUF_ID,
+    DATEDIFF(DAY, CLM_FROM_DT, CLM_THRU_DT) + 1 AS service_days
+FROM Inpatient_Claims
+WHERE CLM_FROM_DT IS NOT NULL
+  AND CLM_THRU_DT IS NOT NULL;
+
+SELECT
+    CLM_ID,
+    DESYNPUF_ID AS BeneID,
+    DATEDIFF(DAY, CLM_FROM_DT, CLM_THRU_DT) + 1 AS service_duration_days
+FROM Inpatient_Claims
+WHERE CLM_FROM_DT IS NOT NULL
+  AND CLM_THRU_DT IS NOT NULL
+  AND CLM_FROM_DT <= CLM_THRU_DT;
+
+  SELECT 
+  DESYNPUF_ID AS BeneID,
+  AVG(DATEDIFF(DAY, CLM_FROM_DT, CLM_THRU_DT) + 1) AS avg_service_duration_days
+  FROM Inpatient_Claims
+WHERE CLM_FROM_DT IS NOT NULL
+  AND CLM_THRU_DT IS NOT NULL
+  AND CLM_FROM_DT <= CLM_THRU_DT
+GROUP BY DESYNPUF_ID;
+
+
+SELECT 
+DESYNPUF_ID AS BeneID,
+CLM_ID,
+DATEDIFF(DAY, CLM_FROM_DT, CLM_THRU_DT, < 30 ) AS READMISSION
+FROM Inpatient_Claims
+WHERE CLM_FROM_DT IS NOT NULL
+  AND CLM_THRU_DT IS NOT NULL
+  AND CLM_FROM_DT >= CLM_THRU_DT
+GROUP BY DESYNPUF_ID;
+
+Readmission Analysis (30-Day)
+SELECT
+    a.DESYNPUF_ID AS BeneID,
+    a.CLM_ID AS index_claim,
+    b.CLM_ID AS readmission_claim,
+    DATEDIFF(DAY, a.CLM_THRU_DT, b.CLM_FROM_DT) AS days_to_readmission
+FROM Inpatient_Claims a
+JOIN Inpatient_Claims b
+  ON a.DESYNPUF_ID = b.DESYNPUF_ID
+ AND b.CLM_FROM_DT > a.CLM_THRU_DT
+ AND DATEDIFF(DAY, a.CLM_THRU_DT, b.CLM_FROM_DT) BETWEEN 1 AND 30
+WHERE a.CLM_FROM_DT IS NOT NULL
+  AND a.CLM_THRU_DT IS NOT NULL
+  AND b.CLM_FROM_DT IS NOT NULL;
+
+length of stay/service duration
+SELECT CLM_ID, DESYNPUF_ID,
+DATEDIFF(Day, CLM_FROM_DT, CLM_THRU_DT) + 1 AS service_days
+FROM Inpatient_Claims
+WHERE CLM_FROM_DT IS NOT NULL
+AND CLM_THRU_DT IS NOT NULL;
+
+Patient Volume & Claim Counts
+SELECT COUNT(*) AS total_claims
+FROM Inpatient_Claims;
+
+Duplicate Claim Check
+SELECT CLM_ID, COUNT(*) AS cnt
+FROM Inpatient_Claims
+GROUP BY CLM_ID
+HAVING COUNT (*) > 1;
+
+Cost Analysis
+Total spend
+SELECT SUM(CLM_PMT_AMT) AS total_cost
+FROM Inpatient_Claims;
+
+Cost per admission
+SELECT Avg(CLM_PMT_AMT) AS avg_cost_per_admission
+FROM Inpatient_Claims
+WHERE CLM_PMT_AMT IS NOT NULL;
+
+Cost per patient 
+SELECT
+  AVG(total_patient_cost) AS avg_cost_per_patient
+FROM (
+    SELECT DESYNPUF_ID, SUM(CLM_PMT_AMT) AS total_patient_cost
+    FROM Inpatient_Claims
+    GROUP BY DESYNPUF_ID
+) t;
+
+
+High-Cost Claim Identification
+SELECT *
+FROM Inpatient_Claims
+Where CLM_PMT_AMT > 
+(SELECT AVG(CLM_PMT_AMT) + 3 * STDEV(CLM_PMT_AMT)
+       FROM Inpatient_Claims);
+
+SELECT *
+FROM Inpatient_Claims
+WHERE
+    ICD9_DGNS_CD_1 LIKE '433%'
+ OR ICD9_DGNS_CD_1 LIKE '434%'
+ OR ICD9_DGNS_CD_1 LIKE '436%';
+
